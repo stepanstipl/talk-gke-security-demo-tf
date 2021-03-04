@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: felix
+spec:
+  selector:
+    matchLabels:
+      app: felix
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app: felix
+    spec:
+      serviceAccountName: felix
+      containers:
+      - name: felix
+        image: eu.gcr.io/my-demo-project/felix:dev.9
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "200m"
+        env:
+        - name: FELIX_GCS_BUCKET
+          value: "my-demo-project-felix"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        ports:
+        - name: http
+          containerPort: 8080

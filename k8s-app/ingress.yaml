@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: felix
+  annotations:
+    networking.gke.io/managed-certificates: felix-certificate
+    kubernetes.io/ingress.global-static-ip-name: felix-primary
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  backend:
+    serviceName: felix
+    servicePort: 80
